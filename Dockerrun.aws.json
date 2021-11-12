@@ -1,0 +1,28 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+      {
+        "name": "nginx",
+        "image": "adi3112002/zomato-shapeai-nginx",
+        "hostname": "nginx",
+        "essentials": true,
+        "postMappings": [{ "hostPort": 80, "containerPort": 80 }],
+        "links": ["client", "nodeserver"],
+        "memory": 128
+      },
+      {
+        "name": "client",
+        "image": "adi3112002/zomato-shapeai-client",
+        "hostname": "client",
+        "essentials": false,
+        "memory": 300
+      },
+      {
+        "name": "nodeserver",
+        "image": "adi3112002/zomato-shapeai-server",
+        "hostname": "nodeserver",
+        "essentials": false,
+        "memory": 300
+      }
+    ]
+  }

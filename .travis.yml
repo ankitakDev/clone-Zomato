@@ -1,0 +1,36 @@
+sudo: required
+
+# Install Docker
+servers:
+  - docker
+
+# Execite logic
+script:
+  - echo "Hello Students!"
+
+after_success:
+  # Build all the docker files
+  - docker build -t adi3112002/zomato-shapeai-client ./client
+  - docker build -t adi3112002/zomato-shapeai-server ./server
+  - docker build -t adi3112002/zomato-shapeai-nginx ./nginx
+
+  # log in docker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  # push to docker hub
+  - docker push adi3112002/zomato-shapeai-client
+  - docker push adi3112002/zomato-shapeai-server
+  - docker push adi3112002/zomato-shapeai-nginx
+
+deploy:
+  # deploy to AWS EBS
+  provider: elasticbeanstalk
+  region: us-east-2
+  app: Zomato-clone-shapeai
+  env: Zomatocloneshapeai-env
+  bucket_name: elasticbeanstalk-us-east-2-193987400041
+  bucket_path: zomatoshapeai
+  on:
+    branch: main
+  access_key_id: $AWS_KEY
+  secret_access_key: $AWS_SECRET
